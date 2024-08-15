@@ -1,7 +1,7 @@
 import json
 
-from jsonschema import validate
 import requests
+from jsonschema import validate
 
 from reqres_tests.utils.files import file_path
 
@@ -12,9 +12,9 @@ email = "eve.holt@reqres.in"
 password = "cityslicka"
 
 payload = {
-        "email": email,
-        "password": password
-    }
+    "email": email,
+    "password": password
+}
 
 
 def test_log_in_user_successeful_status_code():

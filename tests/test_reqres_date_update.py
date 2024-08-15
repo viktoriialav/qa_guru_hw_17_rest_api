@@ -1,7 +1,7 @@
 import json
 
-from jsonschema import validate
 import requests
+from jsonschema import validate
 
 from reqres_tests.utils.files import file_path
 
@@ -28,8 +28,3 @@ def test_date_update_schema():
 
     with open(file_path('put_date_update.json'), encoding='utf-8') as file:
         validate(response.json(), schema=json.load(file))
-
-
-
-
-

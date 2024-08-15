@@ -1,7 +1,7 @@
 import json
 
-from jsonschema import validate
 import requests
+from jsonschema import validate
 
 from reqres_tests.utils.files import file_path
 
@@ -38,16 +38,16 @@ def test_single_user_not_found_status_code():
 
 
 def test_list_users_schema():
-    response = requests.get(url=url + endpoint_single, params={'page': 2})
+    response = requests.get(url=url + endpoint_list, params={'page': 2})
 
-    with open(file_path('get_users.json'), encoding='utf-8') as file:
+    with open(file_path('get_list_users.json'), encoding='utf-8') as file:
         validate(response.json(), json.load(file))
 
 
 def test_single_user_schema():
     response = requests.get(url=url + endpoint_single)
 
-    with open(file_path('get_users.json'), encoding='utf-8') as file:
+    with open(file_path('get_single_user.json'), encoding='utf-8') as file:
         validate(response.json(), json.load(file))
 
 
@@ -55,4 +55,3 @@ def test_single_user_not_found_schema():
     response = requests.get(url=url + endpoint_not_found)
 
     validate(response.json(), schema={})
-

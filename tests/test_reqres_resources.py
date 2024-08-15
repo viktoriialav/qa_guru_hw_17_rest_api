@@ -1,7 +1,7 @@
 import json
 
-from jsonschema import validate
 import requests
+from jsonschema import validate
 
 from reqres_tests.utils.files import file_path
 
@@ -9,7 +9,6 @@ url = 'https://reqres.in'
 endpoint_list = '/api/unknown'
 endpoint_single = '/api/unknown/2'
 endpoint_not_found = '/api/unknown/23'
-
 
 name = "morpheus"
 job = "leader"
@@ -53,6 +52,3 @@ def test_single_resource_not_found_schema():
     response = requests.get(url=url + endpoint_not_found)
 
     validate(response.json(), schema={})
-
-
-

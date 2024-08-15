@@ -1,7 +1,7 @@
 import json
 
-from jsonschema import validate
 import requests
+from jsonschema import validate
 
 from reqres_tests.utils.files import file_path
 
