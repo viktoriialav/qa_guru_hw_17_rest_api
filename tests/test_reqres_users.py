@@ -1,9 +1,7 @@
-import json
-
 import requests
 from jsonschema import validate
 
-from reqres_tests.utils.files import file_path
+from reqres_tests.utils.files import load_schema_from_file
 
 url = 'https://reqres.in'
 endpoint_list = '/api/users'
@@ -20,7 +18,7 @@ payload = {
 
 
 def test_list_users_status_code():
-    response = requests.get(url=url + endpoint_list, params={'page': 2})
+    response = requests.get(url=url + endpoint_list)
 
     assert response.status_code == 200
 
@@ -38,20 +36,45 @@ def test_single_user_not_found_status_code():
 
 
 def test_list_users_schema():
-    response = requests.get(url=url + endpoint_list, params={'page': 2})
+    response = requests.get(url=url + endpoint_list)
 
-    with open(file_path('get_list_users.json'), encoding='utf-8') as file:
-        validate(response.json(), json.load(file))
+    validate(response.json(), schema=load_schema_from_file('get_list_users.json'))
 
 
 def test_single_user_schema():
     response = requests.get(url=url + endpoint_single)
 
-    with open(file_path('get_single_user.json'), encoding='utf-8') as file:
-        validate(response.json(), json.load(file))
+    validate(response.json(), schema=load_schema_from_file('get_single_user.json'))
 
 
 def test_single_user_not_found_schema():
     response = requests.get(url=url + endpoint_not_found)
 
     validate(response.json(), schema={})
+
+
+def test_number_of_users_on_last_page_with_special_per_page():
+    page = 3
+    per_page = 5
+    response = requests.get(url=url + endpoint_list, params={'page': page, 'per_page': per_page})
+
+    assert len(response.json()['data']) + (page * per_page - response.json()['total']) == per_page
+
+
+def test_request_returns_unique_users():
+    page = 1
+
+    response_1 = requests.get(url=url + endpoint_list)
+    per_page = response_1.json()['total']
+    response_2 = requests.get(url=url + endpoint_list, params={'page': page, 'per_page': per_page})
+
+    ids = [elem['id'] for elem in response_2.json()['data']]
+
+    assert len(ids) == len(set(ids))
+
+
+def test_page_in_request_the_same_as_page_in_response():
+    page = 2
+    response = requests.get(url=url + endpoint_list, params={'page': page})
+
+    assert response.json()['page'] == page

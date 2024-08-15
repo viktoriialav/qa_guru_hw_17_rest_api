@@ -1,9 +1,7 @@
-import json
-
 import requests
 from jsonschema import validate
 
-from reqres_tests.utils.files import file_path
+from reqres_tests.utils.files import load_schema_from_file
 
 url = 'https://reqres.in'
 endpoint = '/api/users/2'
@@ -26,5 +24,4 @@ def test_date_update_status_code():
 def test_date_update_schema():
     response = requests.put(url=url + endpoint, data=payload)
 
-    with open(file_path('put_date_update.json'), encoding='utf-8') as file:
-        validate(response.json(), schema=json.load(file))
+    validate(response.json(), schema=load_schema_from_file('put_date_update.json'))

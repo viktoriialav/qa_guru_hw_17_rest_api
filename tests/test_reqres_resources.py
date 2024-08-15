@@ -1,9 +1,7 @@
-import json
-
 import requests
 from jsonschema import validate
 
-from reqres_tests.utils.files import file_path
+from reqres_tests.utils.files import load_schema_from_file
 
 url = 'https://reqres.in'
 endpoint_list = '/api/unknown'
@@ -15,7 +13,7 @@ job = "leader"
 
 
 def test_list_resources_status_code():
-    response = requests.get(url=url + endpoint_list, params={'page': 1})
+    response = requests.get(url=url + endpoint_list)
 
     assert response.status_code == 200
 
@@ -34,18 +32,14 @@ def test_single_resource_not_found_status_code():
 
 def test_list_resources_schema():
     response = requests.get(url=url + endpoint_list)
-    print(json.dumps(response.json(), indent=4))
 
-    with open(file_path('get_list_resources.json'), encoding='utf-8') as file:
-        validate(response.json(), json.load(file))
+    validate(response.json(), schema=load_schema_from_file('get_list_resources.json'))
 
 
 def test_single_resource_schema():
     response = requests.get(url=url + endpoint_single)
-    print(response.json())
 
-    with open(file_path('get_single_resource.json'), encoding='utf-8') as file:
-        validate(response.json(), json.load(file))
+    validate(response.json(), schema=load_schema_from_file('get_single_resource.json'))
 
 
 def test_single_resource_not_found_schema():

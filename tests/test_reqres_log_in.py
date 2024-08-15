@@ -1,9 +1,7 @@
-import json
-
 import requests
 from jsonschema import validate
 
-from reqres_tests.utils.files import file_path
+from reqres_tests.utils.files import load_schema_from_file
 
 url = 'https://reqres.in'
 endpoint = '/api/login'
@@ -18,11 +16,7 @@ payload = {
 
 
 def test_log_in_user_successeful_status_code():
-    headers = {
-        'Content-Type': 'application/json'
-    }
-
-    response = requests.post(url=url + endpoint, headers=headers, json=payload)
+    response = requests.post(url=url + endpoint, data=payload)
 
     assert response.status_code == 200
 
@@ -31,11 +25,7 @@ def test_log_in_user_unsuccesseful_status_code():
     new_payload = dict(payload)
     new_payload.popitem()
 
-    headers = {
-        'Content-Type': 'application/json'
-    }
-
-    response = requests.post(url=url + endpoint, headers=headers, json=new_payload)
+    response = requests.post(url=url + endpoint, data=new_payload)
 
     assert response.status_code == 400
 
@@ -43,8 +33,7 @@ def test_log_in_user_unsuccesseful_status_code():
 def test_log_in_user_successeful_schema_response():
     response = requests.post(url=url + endpoint, data=payload)
 
-    with open(file_path('post_log_in_successful.json'), encoding='utf-8') as file:
-        validate(response.json(), schema=json.load(file))
+    validate(response.json(), schema=load_schema_from_file('post_log_in_successful.json'))
 
 
 def test_log_in_user_unsuccesseful_schema_response():
@@ -53,5 +42,4 @@ def test_log_in_user_unsuccesseful_schema_response():
 
     response = requests.post(url=url + endpoint, data=new_payload)
 
-    with open(file_path('post_log_in_unsuccessful.json'), encoding='utf-8') as file:
-        validate(response.json(), schema=json.load(file))
+    validate(response.json(), schema=load_schema_from_file('post_log_in_unsuccessful.json'))
