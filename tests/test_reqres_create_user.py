@@ -15,15 +15,10 @@ payload = {
 }
 
 
-def test_create_user_status_code():
+def test_create_user():
     response = requests.post(url=url + endpoint, data=payload)
 
     assert response.status_code == 201
-
-
-def test_create_user_schema():
-    response = requests.post(url=url + endpoint, data=payload)
-
     validate(response.json(), schema=load_schema_from_file('post_create_user.json'))
 
 

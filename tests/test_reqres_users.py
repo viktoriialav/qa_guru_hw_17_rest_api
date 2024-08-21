@@ -17,39 +17,24 @@ payload = {
 }
 
 
-def test_list_users_status_code():
+def test_list_users():
     response = requests.get(url=url + endpoint_list)
 
     assert response.status_code == 200
-
-
-def test_single_user_status_code():
-    response = requests.get(url=url + endpoint_single)
-
-    assert response.status_code == 200
-
-
-def test_single_user_not_found_status_code():
-    response = requests.get(url=url + endpoint_not_found)
-
-    assert response.status_code == 404
-
-
-def test_list_users_schema():
-    response = requests.get(url=url + endpoint_list)
-
     validate(response.json(), schema=load_schema_from_file('get_list_users.json'))
 
 
-def test_single_user_schema():
+def test_single_user():
     response = requests.get(url=url + endpoint_single)
 
+    assert response.status_code == 200
     validate(response.json(), schema=load_schema_from_file('get_single_user.json'))
 
 
-def test_single_user_not_found_schema():
+def test_single_user_not_found():
     response = requests.get(url=url + endpoint_not_found)
 
+    assert response.status_code == 404
     validate(response.json(), schema={})
 
 

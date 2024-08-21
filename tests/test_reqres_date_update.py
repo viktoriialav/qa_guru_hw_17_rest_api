@@ -15,13 +15,8 @@ payload = {
 }
 
 
-def test_date_update_status_code():
+def test_date_update():
     response = requests.put(url=url + endpoint, data=payload)
 
     assert response.status_code == 200
-
-
-def test_date_update_schema():
-    response = requests.put(url=url + endpoint, data=payload)
-
     validate(response.json(), schema=load_schema_from_file('put_date_update.json'))
